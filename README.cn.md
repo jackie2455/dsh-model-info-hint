@@ -4,7 +4,11 @@
 
 配置信息来源于用户的 settings 文档（默认 `~/.dsh/settings.yaml`，或 `$DSH_HOME/settings.yaml`），通过 DSH 自带的 settings 服务读取——因此自动支持 `$DSH_HOME` 覆盖、热加载以及 `.yaml`/`.json` 两种格式。
 
-> 英文版见 [`README.md`](./README.md)。
+> 英文版见 [`README.en.md`](./README.en.md)。
+
+## 效果
+
+![悬停模型显示详细配置提示](images/screenshot.png)
 
 ## 工作原理
 
@@ -75,11 +79,14 @@ dsh web
 dsh-model-info-hint/
 ├── package.json        # dsh.client / dsh.bundle 声明
 ├── cordis.patch.yml    # 在 profile 中激活插件行
+├── images/
+│   └── screenshot.png       # 效果截图
 ├── lib/
 │   ├── index.js        # host 侧：读 settings + 暴露 HTTP 接口
 │   └── client.js       # 浏览器侧：悬停检测 + 详细配置提示
-├── README.md           # 英文版
-├── README.cn.md        # 本文件（中文版）
+├── README.md           # 中文版（GitHub 默认展示）
+├── README.en.md        # 英文版
+├── README.cn.md        # 中文版副本
 └── LICENSE
 ```
 

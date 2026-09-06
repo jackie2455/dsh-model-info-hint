@@ -4,6 +4,10 @@ A DeepSeek Harness (DSH) plugin: in the Web GUI model picker, hovering over a ca
 
 Configuration is read from the user's settings document (by default `~/.dsh/settings.yaml`, or `$DSH_HOME/settings.yaml`) through DSH's built-in settings service — so `$DSH_HOME` overrides, hot-reload, and both `.yaml`/`.json` documents are supported automatically.
 
+## Screenshot
+
+![Detailed model configuration hint shown on hover](images/screenshot.png)
+
 ## How it works
 
 The plugin is split in two halves, mirroring `dsh-archived-conversation`:
@@ -75,11 +79,14 @@ the `/model` command) and hover over a model to see its detailed configuration h
 dsh-model-info-hint/
 ├── package.json        # dsh.client / dsh.bundle declarations
 ├── cordis.patch.yml    # activates the plugin row in a profile
+├── images/
+│   └── screenshot.png       # screenshot
 ├── lib/
 │   ├── index.js        # host: reads settings + exposes the HTTP endpoint
 │   └── client.js       # browser: hover detection + detailed config hint
-├── README.md           # this file (English)
-├── README.cn.md        # Chinese version
+├── README.md           # Chinese version (GitHub default)
+├── README.en.md        # this file (English)
+├── README.cn.md        # Chinese version copy
 └── LICENSE
 ```
 
