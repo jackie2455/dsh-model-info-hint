@@ -1,92 +1,98 @@
 # dsh-model-info-hint
 
-一个 DeepSeek Harness（DSH）插件：在 Web GUI 的模型选择器里，只要把鼠标光标悬停在某个待选模型上，就会在该模型旁弹出一个提示，展示该模型的详细配置信息——可接收的输入类型（`text`、`image` 等）、上下文窗口、最大输出 tokens、推理级别，以及所属服务商的协议（`api`）、`baseURL` 与认证环境变量名（`apiKeyEnv`）。
+A DeepSeek Harness (DSH) plugin: in the Web GUI model picker, hovering over a candidate model pops up a hint showing that model's full configuration — the input types it accepts (`text`, `image`, …), context window, max output tokens, reasoning efforts, plus the owning provider's protocol (`api`), `baseURL`, and credential environment variable name (`apiKeyEnv`).
 
-配置信息来源于用户的 settings 文档（默认 `~/.dsh/settings.yaml`，或 `$DSH_HOME/settings.yaml`），通过 DSH 自带的 settings 服务读取——因此自动支持 `$DSH_HOME` 覆盖、热加载以及 `.yaml`/`.json` 两种格式。
+Configuration is read from the user's settings document (by default `~/.dsh/settings.yaml`, or `$DSH_HOME/settings.yaml`) through DSH's built-in settings service — so `$DSH_HOME` overrides, hot-reload, and both `.yaml`/`.json` documents are supported automatically.
 
-## 工作原理
+## How it works
 
-插件分两半，模式与 `dsh-archived-conversation` 一致：
+The plugin is split in two halves, mirroring `dsh-archived-conversation`:
 
-- **Host 侧**（`lib/index.js`）：注入 `settings` 与 `webServer` 服务，注册同源 JSON 接口
-  `GET /model-info-hint/api/models`，一次性返回 settings 文档中所有模型的完整配置，
-  以 `(provider 显示名, model 显示名)` 作为查找键。
-- **浏览器侧**（`lib/client.js`）：监听全局 `mouseover`。当鼠标悬停在模型选择器的某个
-  模型项上时（同时支持输入框的模型按钮菜单和 `/model` 弹窗），按该模型项的可见文本在映射中
-  查到配置，并在光标旁渲染一个非阻塞的详细提示。
+- **Host side** (`lib/index.js`): injects the `settings` and `webServer` services and registers a
+  same-origin JSON endpoint `GET /model-info-hint/api/models` that returns, in one shot, the full
+  configuration of every model in the settings document, keyed by
+  `(provider display name, model display name)`.
+- **Browser side** (`lib/client.js`): listens for a global `mouseover`. When the cursor rests on a
+  model in the model picker (both the composer model seat and the `/model` popup), it resolves the
+  hovered item's visible text against that map and renders a non-blocking detailed hint next to the
+  cursor.
 
-settings 文档中模型路由的典型结构（`llm-pi-ai` 命名空间）：
+The typical model-routing structure in the settings document (the `llm-pi-ai` namespace):
 
 ```yaml
 llm-pi-ai:
   providers:
     my-provider:
-      displayName: 我的服务商       # 可选：默认用 key 作为显示名
-      api: openai-completions       # 可选：线路协议
-      baseURL: https://example/v1   # 可选：服务端点
-      apiKeyEnv: MY_API_KEY         # 可选：认证环境变量名
-      defaultInput:                # 可选：provider 级兜底
+      displayName: My Provider        # optional; defaults to the key
+      api: openai-completions         # optional wire protocol
+      baseURL: https://example/v1     # optional endpoint
+      apiKeyEnv: MY_API_KEY           # optional credential env var name
+      defaultInput:                   # optional provider-level fallback
         - text
         - image
       models:
         - id: gpt-5.4-nano
-          name: 我的服务商 | gpt-5.4-nano   # 可选：默认用 id
-          contextWindow: 400000     # 可选：上下文窗口
-          maxTokens: 32768          # 可选：最大输出
-          input:                   # 可选：模型级覆盖，优先级最高
+          name: My Provider | gpt-5.4-nano   # optional; defaults to the id
+          contextWindow: 400000       # optional context window
+          maxTokens: 32768            # optional max output
+          input:                      # optional per-model override, highest priority
             - text
             - image
-          reasoningEfforts:        # 可选：推理级别
+          reasoningEfforts:           # optional reasoning levels
             high: high
             low: low
 ```
 
-输入类型解析顺序：模型自身 `input` → provider `defaultInput` → `["text"]`。查找是通用的：插件会扫描
-所有已注册 settings 命名空间的 `providers` 字典，因此不限于 `llm-pi-ai`，任何按此结构存储路由的
-适配器都能命中。
+Input-type resolution order: model's own `input` → provider `defaultInput` → `["text"]`. The lookup is
+generic: the plugin scans the `providers` dict of every registered settings namespace, so it is not
+limited to `llm-pi-ai` — any adapter that stores routes under this shape is matched.
 
-## 安装
+## Installation
 
-把本目录作为本地包加入 `web` profile（或你实际使用的 profile），然后重启 DSH：
+Add this directory as a local package to the `web` profile (or whichever profile you use), then restart DSH:
 
 ```sh
-# 从本地路径安装
+# Install from a local path
 dsh plugin --profile web add file:/absolute/path/to/dsh-model-info-hint
 
-# 之后重启 web 界面使新插件生效
+# Then restart the web UI for the new plugin to take effect
 dsh web
 ```
 
-如果插件已发布到 npm，也可以直接：
+If the plugin is published to npm, you can also install it directly:
 
 ```sh
 dsh plugin --profile web add dsh-model-info-hint
 dsh web
 ```
 
-安装后无需任何配置：打开模型选择器（输入框的模型按钮，或 `/model` 命令），把鼠标悬停在模型上即可
-看到详细配置提示。
+No configuration is required after installation: open the model picker (the composer's model button, or
+the `/model` command) and hover over a model to see its detailed configuration hint.
 
-## 目录结构
+## Directory structure
 
 ```
 dsh-model-info-hint/
-├── package.json        # dsh.client / dsh.bundle 声明
-├── cordis.patch.yml    # 在 profile 中激活插件行
+├── package.json        # dsh.client / dsh.bundle declarations
+├── cordis.patch.yml    # activates the plugin row in a profile
 ├── lib/
-│   ├── index.js        # host 侧：读 settings + 暴露 HTTP 接口
-│   └── client.js       # 浏览器侧：悬停检测 + 详细配置提示
-└── README.md
+│   ├── index.js        # host: reads settings + exposes the HTTP endpoint
+│   └── client.js       # browser: hover detection + detailed config hint
+├── README.md           # this file (English)
+├── README.cn.md        # Chinese version
+└── LICENSE
 ```
 
-## 备注
+## Notes
 
-- 提示是非阻塞的（`pointer-events: none`），不会挡住鼠标悬停或点击。
-- 提示会在移出模型、点击、滚动或按任意键时消失，并在 6 秒后自动消失，避免菜单关闭后残留。
-- 提示只展示 `~/.dsh/settings.yaml` 里声明过的字段，未显式配置的项（例如继承自目录的
-  `contextWindow`）不会显示；`input` 因有 provider/默认兜底，始终会显示。
-- `apiKeyEnv` 显示的是环境变量**名称**（例如 `BEEROUTE_KEY_DEFUALT_API_KEY`），不是密钥本身，
-  settings 文档里存放的也只是变量名。
-- 只覆盖在 settings 文档中声明了模型的适配器；像内置的 `deepseek-official` 这种未在
-  `~/.dsh/settings.yaml` 里描述模型的适配器，不会显示提示。
-- 界面文案使用中文，输入类型名（`text`/`image` 等）与 settings 文档保持一致。
+- The hint is non-blocking (`pointer-events: none`), so it never intercepts hover or clicks.
+- The hint disappears when the pointer leaves the model, on click, on scroll, or on any key press, and
+  auto-dismisses after 6 seconds so it never lingers after the menu closes.
+- The hint only shows fields declared in `~/.dsh/settings.yaml`; fields that were not explicitly set
+  (for example a `contextWindow` inherited from the catalog) are omitted. `input` always shows because
+  it has provider / default fallbacks.
+- `apiKeyEnv` shows the environment variable **name** (e.g. `BEEROUTE_KEY_DEFUALT_API_KEY`), not the
+  secret itself — the settings document stores only the variable name.
+- Only adapters that declare models in the settings document are covered; a built-in adapter such as
+  `deepseek-official`, which is not described in `~/.dsh/settings.yaml`, shows no hint.
+- The UI text is in Chinese, and input type names (`text`/`image`, …) match the settings document.

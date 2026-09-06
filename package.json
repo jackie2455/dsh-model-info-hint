@@ -14,6 +14,7 @@
     "lib/client.js",
     "cordis.patch.yml",
     "README.md",
+    "README.cn.md",
     "LICENSE"
   ],
   "keywords": [
