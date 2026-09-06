@@ -1,0 +1,41 @@
+{
+  "name": "dsh-model-info-hint",
+  "description": "Show a hover hint with a model's full configuration (input types, context window, max tokens, protocol, base URL, credential env, …) over each model in the DeepSeek Harness web model picker, read from ~/.dsh/settings.yaml.",
+  "version": "1.1.0",
+  "type": "module",
+  "main": "lib/index.js",
+  "exports": {
+    ".": "./lib/index.js",
+    "./client": "./lib/client.js",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "lib/index.js",
+    "lib/client.js",
+    "cordis.patch.yml",
+    "README.md",
+    "LICENSE"
+  ],
+  "keywords": [
+    "dsh",
+    "deepseek-harness",
+    "deepseek",
+    "plugin",
+    "model",
+    "config",
+    "input",
+    "modality",
+    "hint",
+    "tooltip"
+  ],
+  "license": "MIT",
+  "dsh": {
+    "client": {
+      "platform": "web",
+      "inject": []
+    },
+    "bundle": {
+      "patch": "./cordis.patch.yml"
+    }
+  }
+}
