@@ -53,20 +53,26 @@ limited to `llm-pi-ai` — any adapter that stores routes under this shape is ma
 
 ## Installation
 
-Add this directory as a local package to the `web` profile (or whichever profile you use), then restart DSH:
+Add this directory as a local package to **the profile that holds your model configuration**, then restart DSH:
 
 ```sh
-# Install from a local path
-dsh plugin --profile web add file:/absolute/path/to/dsh-model-info-hint
+# Install from a local path (the profile must be the one that configures llm-pi-ai providers)
+dsh plugin --profile <profile> add file:/absolute/path/to/dsh-model-info-hint
 
-# Then restart the web UI for the new plugin to take effect
+# Then restart DSH for the new plugin to take effect
 dsh web
 ```
+
+> ⚠️ Pick the right profile. The hint reads the `providers` dict of the settings document, so only a
+> profile that configures `llm-pi-ai` (or another adapter storing its routes in that shape) has anything
+> to show. Installed into an empty profile the plugin still loads and its endpoint still answers, but
+> hovering shows nothing. The DeepSeek Harness desktop app runs the `desktop` profile — use
+> `--profile desktop` if your models are configured there.
 
 If the plugin is published to npm, you can also install it directly:
 
 ```sh
-dsh plugin --profile web add dsh-model-info-hint
+dsh plugin --profile <profile> add dsh-model-info-hint
 dsh web
 ```
 
@@ -92,6 +98,9 @@ dsh-model-info-hint/
 
 ## Notes
 
+- Adapted to DSH `0.2.0-rc.2`: the `/model` popup now receives its provider structurally through
+  `MenuGroup` (`section[role="group"]`), so this version reads the group the same way the composer menu
+  does, and falls back to a bare model name when that name is unique across all providers.
 - The hint is non-blocking (`pointer-events: none`), so it never intercepts hover or clicks.
 - The hint disappears when the pointer leaves the model, on click, on scroll, or on any key press, and
   auto-dismisses after 6 seconds so it never lingers after the menu closes.

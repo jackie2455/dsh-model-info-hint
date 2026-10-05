@@ -53,20 +53,26 @@ llm-pi-ai:
 
 ## 安装
 
-把本目录作为本地包加入 `web` profile（或你实际使用的 profile），然后重启 DSH：
+把本目录作为本地包加入**模型配置所在的 profile**，然后重启 DSH：
 
 ```sh
-# 从本地路径安装
-dsh plugin --profile web add file:/absolute/path/to/dsh-model-info-hint
+# 从本地路径安装（profile 必须是配置了 llm-pi-ai providers 的那一个）
+dsh plugin --profile <profile> add file:/absolute/path/to/dsh-model-info-hint
 
-# 之后重启 web 界面使新插件生效
+# 之后重启 DSH 使新插件生效
 dsh web
 ```
+
+> ⚠️ profile 别选错。提示的数据来自 settings 文档里的 `providers` 字典，只有配置了
+> `llm-pi-ai`（或其它按同结构存放路由的适配器）的 profile 才有内容可显示；装到空 profile 上，
+> 插件会正常加载、接口也能通，但悬停不会有任何提示。
+> 桌面端（DeepSeek Harness 桌面应用）跑的是 `desktop` profile，如果你的模型是在桌面端配置的，
+> 请用 `--profile desktop`。
 
 如果插件已发布到 npm，也可以直接：
 
 ```sh
-dsh plugin --profile web add dsh-model-info-hint
+dsh plugin --profile <profile> add dsh-model-info-hint
 dsh web
 ```
 
@@ -92,6 +98,9 @@ dsh-model-info-hint/
 
 ## 备注
 
+- 已适配 DSH `0.2.0-rc.2`：`/model` 弹窗的 provider 现在由 `MenuGroup` 结构化提供
+  （`section[role="group"]`），本版改用与输入框模型菜单一致的取法；查表未命中时，若该模型名在
+  所有 provider 中唯一，则按模型名兜底。
 - 提示是非阻塞的（`pointer-events: none`），不会挡住鼠标悬停或点击。
 - 提示会在移出模型、点击、滚动或按任意键时消失，并在 6 秒后自动消失，避免菜单关闭后残留。
 - 提示只展示 `~/.dsh/settings.yaml` 里声明过的字段，未显式配置的项（例如继承自目录的
