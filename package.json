@@ -13,8 +13,10 @@
     "lib/index.js",
     "lib/client.js",
     "cordis.patch.yml",
+    "images",
     "README.md",
     "README.cn.md",
+    "README.en.md",
     "LICENSE"
   ],
   "keywords": [

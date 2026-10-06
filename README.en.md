@@ -8,6 +8,11 @@ Configuration is read from the user's settings document (by default `~/.dsh/sett
 
 ![Detailed model configuration hint shown on hover](images/screenshot.png)
 
+The hint is anchored by the edge facing the model picker panel and keeps a fixed **14px** gap from
+the panel as a whole — search box and model rows both stay uncovered:
+
+![The hint keeps a fixed 14px gap from the model picker panel](images/preview-gap.png)
+
 ## How it works
 
 The plugin is split in two halves, mirroring `dsh-archived-conversation`:
