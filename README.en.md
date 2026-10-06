@@ -101,9 +101,10 @@ dsh-model-info-hint/
 - Adapted to DSH `0.2.0-rc.2`: the `/model` popup now receives its provider structurally through
   `MenuGroup` (`section[role="group"]`), so this version reads the group the same way the composer menu
   does, and falls back to a bare model name when that name is unique across all providers.
-- The hint is anchored by the edge facing the model list (`right` when it sits to the list's left,
-  `left` when it sits to its right), so it keeps a fixed 14px gap from that list at whatever width its
-  content renders and never covers the models.
+- The hint is anchored by the edge facing the model picker panel (`right` when it sits to the panel's
+  left, `left` when it sits to its right), so it keeps a fixed 14px gap from that panel at whatever
+  width its content renders. It measures against the panel itself (`[data-menu-material]`, which
+  carries the search box), so it never covers the search row or the model rows.
 - The hint is non-blocking (`pointer-events: none`), so it never intercepts hover or clicks.
 - The hint disappears when the pointer leaves the model, on click, on scroll, or on any key press, and
   auto-dismisses after 6 seconds so it never lingers after the menu closes.
