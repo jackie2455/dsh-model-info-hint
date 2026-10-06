@@ -116,7 +116,7 @@ dsh-model-info-hint/
 - The hint only shows fields declared in `~/.dsh/settings.yaml`; fields that were not explicitly set
   (for example a `contextWindow` inherited from the catalog) are omitted. `input` always shows because
   it has provider / default fallbacks.
-- `apiKeyEnv` shows the environment variable **name** (e.g. `BEEROUTE_KEY_DEFUALT_API_KEY`), not the
+- `apiKeyEnv` shows the environment variable **name** (e.g. `MY_PROVIDER_API_KEY`), not the
   secret itself — the settings document stores only the variable name.
 - Only adapters that declare models in the settings document are covered; a built-in adapter such as
   `deepseek-official`, which is not described in `~/.dsh/settings.yaml`, shows no hint.

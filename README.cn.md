@@ -113,7 +113,7 @@ dsh-model-info-hint/
 - 提示会在移出模型、点击、滚动或按任意键时消失，并在 6 秒后自动消失，避免菜单关闭后残留。
 - 提示只展示 `~/.dsh/settings.yaml` 里声明过的字段，未显式配置的项（例如继承自目录的
   `contextWindow`）不会显示；`input` 因有 provider/默认兜底，始终会显示。
-- `apiKeyEnv` 显示的是环境变量**名称**（例如 `BEEROUTE_KEY_DEFUALT_API_KEY`），不是密钥本身，
+- `apiKeyEnv` 显示的是环境变量**名称**（例如 `MY_PROVIDER_API_KEY`），不是密钥本身，
   settings 文档里存放的也只是变量名。
 - 只覆盖在 settings 文档中声明了模型的适配器；像内置的 `deepseek-official` 这种未在
   `~/.dsh/settings.yaml` 里描述模型的适配器，不会显示提示。
