@@ -8,8 +8,8 @@ Configuration is read from the user's settings document (by default `~/.dsh/sett
 
 ![Detailed model configuration hint shown on hover](images/screenshot.png)
 
-The hint is anchored by the edge facing the model picker panel and keeps a fixed **14px** gap from
-the panel as a whole — search box and model rows both stay uncovered:
+The hint is placed from its own measured box and keeps a fixed **14px** gap from the model picker
+panel as a whole — search box and model rows both stay uncovered:
 
 ![The hint keeps a fixed 14px gap from the model picker panel](images/preview-gap.png)
 
@@ -106,10 +106,10 @@ dsh-model-info-hint/
 - Adapted to DSH `0.2.0-rc.2`: the `/model` popup now receives its provider structurally through
   `MenuGroup` (`section[role="group"]`), so this version reads the group the same way the composer menu
   does, and falls back to a bare model name when that name is unique across all providers.
-- The hint is anchored by the edge facing the model picker panel (`right` when it sits to the panel's
-  left, `left` when it sits to its right), so it keeps a fixed 14px gap from that panel at whatever
-  width its content renders. It measures against the panel itself (`[data-menu-material]`, which
-  carries the search box), so it never covers the search row or the model rows.
+- The hint is painted first and then placed from its own **measured** box, so it keeps an exact `14px`
+  gap from the model picker panel (`[data-menu-material]`, which carries the search box) at any
+  content width. Only `left` is used: a `right`-anchored box is positioned against its containing
+  block, which need not be the viewport the panel's rect was measured in.
 - The hint is non-blocking (`pointer-events: none`), so it never intercepts hover or clicks.
 - The hint disappears when the pointer leaves the model, on click, on scroll, or on any key press, and
   auto-dismisses after 6 seconds so it never lingers after the menu closes.

@@ -1,7 +1,7 @@
 {
   "name": "dsh-model-info-hint",
   "description": "Show a hover hint with a model's full configuration (input types, context window, max tokens, protocol, base URL, credential env, …) over each model in the DeepSeek Harness web model picker, read from ~/.dsh/settings.yaml.",
-  "version": "1.2.2",
+  "version": "1.2.3",
   "type": "module",
   "main": "lib/index.js",
   "exports": {
